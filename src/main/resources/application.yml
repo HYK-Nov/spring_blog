@@ -1,0 +1,21 @@
+spring:
+  # 민감 정보 분리
+  profiles:
+    active: db
+
+  #  JSP 설정
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+  #  MySQL 설정
+  datasource:
+    url: ${url}
+    username: ${adminname}
+    password: ${password}
+    driver-class-name: ${driver-class-name}
+
+# mybatis(자동 의존성 주입을 사용하지 않는 경우)
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/**/**.xml
