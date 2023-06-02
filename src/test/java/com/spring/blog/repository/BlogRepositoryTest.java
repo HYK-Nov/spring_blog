@@ -96,6 +96,10 @@ public class BlogRepositoryTest {
         long blogId = 2;
         String blogTitle = "수정된 제목";
         String blogContent = "수정된 내용";
+
+        /*Blog blog = blogRepository.findById(blogId);
+        blog.setBlogTitle(blogTitle);
+        blog.setBlogContent(blogContent);*/
         Blog blog = Blog.builder()
                 .blogId(blogId)
                 .blogTitle(blogTitle)
