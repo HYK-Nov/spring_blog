@@ -14,7 +14,8 @@
 
         <body>
             <div class="container">
-                <table class="table">
+                <h1 class="text-center">게시물 목록</h1>
+                <table class="table table-hover">
                     <thead>
                         <tr id="listHead">
                             <th scope="col" class="col-1">번호</th>
@@ -26,9 +27,9 @@
                     </thead>
                     <tbody>
                         <c:forEach var="blog" items="${blogList}">
-                            <tr id="listBody" onclick="location.href='/blog/list/${blog.blogId}'">
+                            <tr id="listBody">
                                 <td>${blog.blogId}</td>
-                                <td>${blog.blogTitle}</td>
+                                <td onclick="location.href='/blog/detail/${blog.blogId}'">${blog.blogTitle}</td>
                                 <td>${blog.writer}</td>
                                 <td>${blog.publishedAt}</td>
                                 <td>${blog.blogCount}</td>
@@ -36,6 +37,11 @@
                         </c:forEach>
                     </tbody>
                 </table>
+                <div class="row">
+                    <div class="col-1">
+                        <a href="/blog/insert"><button type="button" class="btn btn-outline-primary">글쓰기</button></a>
+                    </div>
+                </div>
             </div>
             <script type="text/javascript">
                 const headAlign = document.querySelectorAll('#listHead th:nth-child(1), th:nth-last-child(-n+2)');

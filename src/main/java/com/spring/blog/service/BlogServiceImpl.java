@@ -41,4 +41,9 @@ public class BlogServiceImpl implements BlogService{
     public void update(Blog blog) {
         blogRepository.update(blog);
     }
+
+    @Override
+    public void updateBlogCount(Blog blog) {
+        blogRepository.updateBlogCount(blog);
+    }
 }
