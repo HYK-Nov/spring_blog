@@ -14,6 +14,7 @@
             updated_at,
             blog_count
         FROM blog
+        ORDER BY blog_id DESC
     </select>
     <select id="findById" resultType="com.spring.blog.entity.Blog">
         SELECT

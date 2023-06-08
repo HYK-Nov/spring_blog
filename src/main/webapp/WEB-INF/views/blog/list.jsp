@@ -19,8 +19,8 @@
                     <thead>
                         <tr id="listHead">
                             <th scope="col" class="col-1">번호</th>
-                            <th scope="col" class="col-7">제목</th>
-                            <th scope="col" class="col-2">이름</th>
+                            <th scope="col" class="col-8">제목</th>
+                            <th scope="col" class="col-1">이름</th>
                             <th scope="col" class="col-1">작성일</th>
                             <th scope="col" class="col-1">조회수</th>
                         </tr>

@@ -1,5 +1,6 @@
 package com.spring.blog.controller;
 
+import com.spring.blog.dto.BlogUpdateDTO;
 import com.spring.blog.entity.Blog;
 import com.spring.blog.exception.NotFoundBlogIdException;
 import com.spring.blog.service.BlogService;
