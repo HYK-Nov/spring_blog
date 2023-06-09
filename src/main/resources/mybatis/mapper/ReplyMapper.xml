@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.blog.repository.ReplyRepository">
+    <select id="findAllByBlogId" resultType="com.spring.blog.dto.ReplyFindByIdDTO" parameterType="long">
+        SELECT
+            reply_id,
+            reply_writer,
+            reply_content,
+            published_at,
+            updated_at
+        FROM reply
+        WHERE blog_id = #{blogId}
+    </select>
+    <select id="findByReplyId" resultType="com.spring.blog.dto.ReplyFindByIdDTO" parameterType="long">
+        SELECT
+            reply_id,
+            reply_writer,
+            reply_content,
+            published_at,
+            updated_at
+        FROM reply
+        WHERE reply_id = #{replyId}
+    </select>
+</mapper>
