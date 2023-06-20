@@ -47,7 +47,26 @@
                         </form>
                     </div>
                 </div>
+                <div class="row">
+                    <div id="replies"></div>
+                </div>
             </div>
+            <script>
+                // 글 구성에 필요한 글 번호를 JS 변수에 저장
+                let blogId = "${blog.blogId}";
+
+                // blogId를 받아 전체 데이터를 JS내부로 가져오는 함수
+                function getAllReplies(bId) {
+                    let url = `http://localhost:8080/reply/${bId}/all`;
+                    fetch(url, { method: 'get' }) // get방식으로 위 주소에 요청 넣기
+                        .then(res => res.json()) // 응답받은 요소중 json만 뽑기
+                        .then(data => { // 뽑아온 json으로 처리 작업하기
+                            console.log(data);
+                        });
+                }
+
+                getAllReplies(blogId);
+            </script>
         </body>
 
         </html>
