@@ -1,6 +1,5 @@
 package com.spring.blog.controller;
 
-import com.spring.blog.dto.BlogUpdateDTO;
 import com.spring.blog.entity.Blog;
 import com.spring.blog.exception.NotFoundBlogIdException;
 import com.spring.blog.service.BlogService;
@@ -19,13 +18,13 @@ import java.util.List;
             // 다른 어노테이션이랑 교환해서 쓸 수 없음
 @RequestMapping("/blog")
 @Log4j2 // sout이 아닌 로깅을 통한 디버깅을 위해 선언
-public class blogController {
+public class BlogController {
 
 //    컨트롤러 레이어는 서비스 레이어를 직접 호출
     private BlogService blogService;
 
     @Autowired
-    public blogController(BlogService blogService){
+    public BlogController(BlogService blogService){
         this.blogService = blogService;
     }
 

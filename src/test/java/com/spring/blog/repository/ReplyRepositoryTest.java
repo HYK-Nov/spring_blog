@@ -1,6 +1,9 @@
 package com.spring.blog.repository;
 
 import com.spring.blog.dto.ReplyFindByIdDTO;
+import com.spring.blog.dto.ReplyInsertDTO;
+import com.spring.blog.dto.ReplyUpdateDTO;
+import com.spring.blog.entity.Reply;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class ReplyRepositoryTest {
@@ -40,5 +43,58 @@ public class ReplyRepositoryTest {
 //        THEN
         assertEquals(replyId, reply.getReplyId());
         assertEquals("엄준식", reply.getReplyWriter());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("댓글번호 2번 삭제")
+    public void deleteByReplyIdTest(){
+        long replyId = 2;
+        long blogId = 2;
+
+        replyRepository.deleteByReplyId(replyId);
+
+        assertNull(replyRepository.findByReplyId(replyId));
+        assertEquals(replyRepository.findAllByBlogId(blogId).size(), 2);
+    }
+
+    @Test
+    @Transactional
+    public void saveTest(){
+        long blogId = 1;
+        String replyWriter = "ㅇㅇ";
+        String replyContent = "test";
+        ReplyInsertDTO replyInsertDTO = ReplyInsertDTO.builder()
+                .blogId(blogId)
+                .replyWriter(replyWriter)
+                .replyContent(replyContent)
+                .build();
+
+        replyRepository.save(replyInsertDTO);
+        List<ReplyFindByIdDTO> list = replyRepository.findAllByBlogId(blogId);
+        ReplyFindByIdDTO result = list.get(list.size()-1);
+
+        assertEquals(result.getReplyWriter(), replyWriter);
+        assertEquals(result.getReplyContent(), replyContent);
+    }
+
+    @Test
+    @Transactional
+    public void updateTest(){
+        long replyId = 3;
+        String replyWriter = "333번 작성자";
+        String replyContent = "333번 내용";
+        ReplyUpdateDTO replyUpdateDTO = ReplyUpdateDTO.builder()
+                .replyId(replyId)
+                .replyWriter(replyWriter)
+                .replyContent(replyContent)
+                .build();
+
+        replyRepository.update(replyUpdateDTO);
+        ReplyFindByIdDTO result = replyRepository.findByReplyId(replyId);
+
+        assertEquals(result.getReplyWriter(), replyWriter);
+        assertEquals(result.getReplyContent(), replyContent);
+        assertTrue(result.getUpdatedAt().isAfter(result.getPublishedAt()));
     }
 }
