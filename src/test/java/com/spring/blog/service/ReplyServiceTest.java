@@ -92,4 +92,14 @@ public class ReplyServiceTest {
         assertEquals(result.getReplyContent(), replyContent);
         assertTrue(result.getUpdatedAt().isAfter(result.getPublishedAt()));
     }
+
+    @Test
+    @Transactional
+    public void deleteAllReplyByBlogIdTest(){
+        long blogId = 1;
+
+        List<ReplyFindByIdDTO> list = replyService.findAllByBlogId(blogId);
+
+        assertEquals(list.size(), 0);
+    }
 }

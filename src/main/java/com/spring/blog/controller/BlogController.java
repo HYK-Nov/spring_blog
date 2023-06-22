@@ -3,6 +3,7 @@ package com.spring.blog.controller;
 import com.spring.blog.entity.Blog;
 import com.spring.blog.exception.NotFoundBlogIdException;
 import com.spring.blog.service.BlogService;
+import com.spring.blog.service.ReplyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

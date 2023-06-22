@@ -1,8 +1,8 @@
 package com.spring.blog.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.blog.dto.ReplyInsertDTO;
+import com.spring.blog.repository.ReplyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,6 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc // 원래 MVC 테스트는 브라우저를 켜아 테스트할 수 있기 때문에 브라우저를 대체할 객체를 만들어 수행
 class ReplyControllerTest {
+
+//    임시적으로 ReplyRepository 생성
+//    Repository 레이어의 메서드는 쿼리문을 하나만 호출하는 것이 보장되지만
+//    Service 레이어의 메서드는 추후에 쿼리문을 두 개 이상 호출 할 수도 있고, 그런 변경 점이 생겼을 때 테스트 코드도 같이 수정할 가능성이 생김
+    @Autowired
+    private ReplyRepository replyRepository;
 
     @Autowired
     private MockMvc mockMvc; // @AutoConfigureMockMvc 로 자동 주입
@@ -117,5 +122,19 @@ class ReplyControllerTest {
                 .andExpect(jsonPath("$[1].replyWriter").value(replyWriter))
                 .andExpect(jsonPath("$[1].replyContent").value(replyContent))
                 .andDo(print());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("댓글번호 3번을 삭제할 경우, 글번호 2번의 댓글수는 2개, 그리고 단일 댓글 조회시 null")
+    void deleteReply() throws Exception {
+        long replyId = 3;
+        long blogId = 2;
+        String url = "/reply/"+replyId;
+
+        mockMvc.perform(delete(url));
+
+        assertEquals(replyRepository.findAllByBlogId(blogId).size(), 3);
+        assertNull(replyRepository.findByReplyId(replyId));
     }
 }

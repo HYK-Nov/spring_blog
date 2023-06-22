@@ -14,4 +14,5 @@ public interface ReplyRepository {
     void deleteByReplyId(long replyId);
     void save(ReplyInsertDTO replyInsertDTO);
     void update(ReplyUpdateDTO replyUpdateDTO);
+    void deleteAllReplyByBlogId(long blogId);
 }

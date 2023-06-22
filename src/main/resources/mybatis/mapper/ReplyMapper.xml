@@ -39,4 +39,9 @@
             updated_at = NOW()
         WHERE reply_id = #{replyId}
     </update>
+    <delete id="deleteAllReplyByBlogId" parameterType="long">
+        DELETE
+        FROM reply
+        WHERE blog_id = #{blogId}
+    </delete>
 </mapper>

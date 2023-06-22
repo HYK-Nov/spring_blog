@@ -61,4 +61,12 @@ public class ReplyController {
         
         return ResponseEntity.ok("저장 완료");
     }
+
+    @DeleteMapping("/{replyId}")
+    public ResponseEntity<String> deleteReply(@PathVariable long replyId){
+
+        replyService.deleteByReplyId(replyId);
+
+        return ResponseEntity.ok("삭제 완료");
+    }
 }

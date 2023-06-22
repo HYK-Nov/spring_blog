@@ -15,7 +15,7 @@
         <body>
             <div class="container">
                 <h1 class="text-center">게시물 목록</h1>
-                <table class="table table-hover">
+                <table class="table">
                     <thead>
                         <tr id="listHead">
                             <th scope="col" class="col-1">번호</th>

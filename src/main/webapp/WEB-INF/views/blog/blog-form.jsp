@@ -34,11 +34,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
-                            <button type="submit" class="btn btn-outline-primary">작성</button>
-                        </div>
                         <div class="col-1">
                             <a href="/blog/list"><button type="button" class="btn btn-secondary">목록</button></a>
+                        </div>
+                        <div class="col-8">
+                            <button type="submit" class="btn btn-outline-primary">작성</button>
                         </div>
                     </div>
                 </form>
