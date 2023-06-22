@@ -57,11 +57,29 @@
 
                 // blogId를 받아 전체 데이터를 JS내부로 가져오는 함수
                 function getAllReplies(bId) {
-                    let url = `http://localhost:8080/reply/${bId}/all`;
+                    /* 
+                        <%-- jsp와 js가 모두 ${변수명} 문법을 공유하고, 이 중 .jsp파일에서는
+                        ${}의 해석을 jsp식으로 먼저 하기 때문에, 해당 ${}가 백틱 내부에서 쓰이는 경우
+                        \${} 형식으로 \를 추가로 왼쪽에 붙여서 jsp용으로 작성한 것이 아님을 명시해야 함 --%>
+                    */
+                    let url = `http://localhost:8080/reply/\${bId}/all`;
+                    let str = '';
                     fetch(url, { method: 'get' }) // get방식으로 위 주소에 요청 넣기
                         .then(res => res.json()) // 응답받은 요소중 json만 뽑기
-                        .then(data => { // 뽑아온 json으로 처리 작업하기
-                            console.log(data);
+                        .then(replies => { // 뽑아온 json으로 처리 작업하기
+                            console.log(replies);
+                            // for (reply of replies) {
+                            //     console.log(reply);
+                            //     str += `<h3>글쓴이: \${reply.replyWriter}, 댓글내용: \${reply.replyContent}</h3>`;
+                            // }
+                            // console.log(str); // 저장된 태그 확인
+                            // const $replies = document.querySelector('#replies');
+                            // $replies.innerHTML = str;
+                            replies.map((reply, i) => { // 첫 파라미터: 반복대상자료, 두번째 파라미터: 순번
+                                str += `<h3>\${i}번째 댓글 || 글쓴이: \${reply.replyWriter}, 댓글내용: \${reply.replyContent}</h3>`;
+                            });
+                            const $replies = document.querySelector('#replies');
+                            $replies.innerHTML = str;
                         });
                 }
 
