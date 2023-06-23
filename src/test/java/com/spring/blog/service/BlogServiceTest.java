@@ -56,7 +56,7 @@ public class BlogServiceTest {
 
     @Test
     @Transactional
-    public void saveTest(){
+    public void saveTest() {
 //        GIVEN
         String writer = "추가 유저";
         String title = "추가 제목";
@@ -79,7 +79,7 @@ public class BlogServiceTest {
 
     @Test
     @Transactional
-    public void updateTest(){
+    public void updateTest() {
 //        GIVEN
         long blogId = 2;
         String blogTitle = "수정된 제목";
@@ -95,4 +95,6 @@ public class BlogServiceTest {
         assertEquals(blogTitle, blogService.findById(blogId).getBlogTitle());
         assertEquals(blogContent, blogService.findById(blogId).getBlogContent());
     }
+
+//    blog와 함께 reply가 삭제되는 케이스는 따로 다시 테스트 코드를 하나 더 작성해주는게 좋음
 }

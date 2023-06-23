@@ -15,6 +15,27 @@
 
         <body>
             <div class="container">
+                <!-- Modal -->
+                <div class="modal fade" tabindex="-1" id="replyUpdateModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">댓글 수정하기</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                작성자: <input type="text" class="form-control" id="modalReplyWriter">
+                                댓글내용: <input type="text" class="form-control" id="modalReplyContent">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                <button type="button" class="btn btn-primary" id="replyUpdateBtn">저장</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col">
                         <h5><strong>${blog.blogTitle}</strong></h5>
@@ -48,6 +69,7 @@
                         </form>
                     </div>
                 </div>
+                <hr>
                 <div id="replies"></div>
                 <div class="row">
                     <!-- 비동기 form의 경우는 목적지로 이동하지 않고 페이지 내에서 처리가 되므로
@@ -63,6 +85,7 @@
                     </div>
                 </div>
             </div>
+
             <script>
                 // 글 구성에 필요한 글 번호를 JS 변수에 저장
                 let blogId = "${blog.blogId}";
@@ -76,7 +99,7 @@
                     */
                     let url = `/reply/\${bId}/all`;
                     let str = '';
-                    fetch(url, { method: 'get' }) // get방식으로 위 주소에 요청 넣기
+                    fetch(url, { method: 'GET' }) // get방식으로 위 주소에 요청 넣기
                         .then(res => res.json()) // 응답받은 요소중 json만 뽑기
                         .then(replies => { // 뽑아온 json으로 처리 작업하기
                             // for (reply of replies) {
@@ -90,10 +113,17 @@
                             replies.map((reply, i) => { // 첫 파라미터: 반복대상자료, 두번째 파라미터: 순번
                                 str += `
                                     <div class="row">
-                                        <div class="col">\${reply.replyWriter}</div>
-                                        <div class="col-9">\${reply.replyContent}</div>
+                                        <div class="col">
+                                            <span id="replyWriter\${reply.replyId}">\${reply.replyWriter}</span>
+                                        </div>
+                                        <div class="col-9">
+                                            <span id="replyContent\${reply.replyId}">\${reply.replyContent}</span>
+                                        </div>
                                         <div class="col">\${reply.updatedAt}</div>
-                                        <div class="col"><i class="bi bi-x-lg deleteReplyBtn btn" data-replyId="\${reply.replyId}"></i></div>
+                                        <div class="col">
+                                            <i class="bi bi-pencil-square updateReplyBtn btn btn-sm" data-replyId="\${reply.replyId}" data-bs-toggle="modal" data-bs-target="#replyUpdateModal" ></i>
+                                            <i class="bi bi-x-lg deleteReplyBtn btn btn-sm" data-replyId="\${reply.replyId}"></i>
+                                        </div>
                                     </div>
                                     <hr>
                                     `;
@@ -131,7 +161,7 @@
                     }
 
                     fetch(url, {
-                        method: 'post',
+                        method: 'POST',
                         headers: { // header에 보내는 데이터의 자료형에 대해 기술
                             // json 데이터를 요청과 함께 전달, @RequestBody를 입력받는 로직에 추가
                             "Content-Type": "application/json",
@@ -162,23 +192,87 @@
                 $replies.onclick = (e) => {
                     // 클릭한 요소가 #replies의 자손태그인 .deleteReplyBtn 인지 검사하기
                     // 이벤트 객체 .target.dataset.replyId
-                    if (!e.target.matches('#replies .deleteReplyBtn')) {
+                    if (!e.target.matches('#replies .deleteReplyBtn') && !e.target.matches('#replies .updateReplyBtn')) {
+                        return;
+                    } else if (e.target.matches('#replies .deleteReplyBtn')) {
+                        deleteReply();
+                    } else if (e.target.matches('#replies .updateReplyBtn')) {
+                        openUpdateReplyModal();
+                    }
+
+                    function openUpdateReplyModal() {
+                        const replyId = e.target.dataset.replyid;
+
+                        let replyWriterId = `#replyWriter\${replyId}`;
+                        let replyContentId = `#replyContent\${replyId }`;
+
+                        const $replyWriter = document.querySelector(replyWriterId);
+                        const $replyContent = document.querySelector(replyContentId);
+
+                        // 위에서 추출한 id번호와 getElementId()를 통해 요소를 가져온 다음
+                        // 해당 요소의 text 값을 얻어서 모달 창의 폼 양식 내부에 넣어줌
+                        document.querySelector("#modalReplyWriter").setAttribute('value', $replyWriter.innerText);
+                        document.querySelector("#modalReplyContent").setAttribute('value', $replyContent.innerText);
+
+                        document.querySelector("#replyUpdateModal").setAttribute('data-replyId', replyId);
+                    }
+
+                    // 삭제 버튼을 누르면 실행될 함수
+                    function deleteReply() {
+                        // 이벤트 객체의 target 속성의 dataset 속성 내부에 댓글번호가 있으므로 확인
+                        const replyId = e.target.dataset.replyid;
+
+                        if (confirm("삭제하시겠습니까?")) {
+                            let url = `/reply/\${replyId}`;
+
+                            fetch(url, { method: 'DELETE', })
+                                .then(() => {
+                                    getAllReplies(blogId);
+                                });
+                        }
+                    }
+                }
+
+                const $replyUpdateBtn = document.querySelector("#replyUpdateBtn");
+                $replyUpdateBtn.onclick = (e) => {
+                    const $modalReply = document.querySelector("#replyUpdateModal");
+                    const replyId = $modalReply.getAttribute("data-replyId");
+                    const $modalReplyWriter = document.querySelector("#modalReplyWriter");
+                    const $modalReplyContent = document.querySelector("#modalReplyContent");
+                    let url = `/reply/\${replyId}`;
+
+                    if ($modalReplyWriter.value.trim() === "") {
+                        alert("글쓴이를 채워주세요");
                         return;
                     }
 
-                    // 이벤트 객체의 target 속성의 dataset 속성 내부에 댓글번호가 있으므로 확인
-                    const $replyId = e.target.dataset.replyid;
-
-                    if (confirm("삭제하시겠습니까?")) {
-                        let url = `/reply/\${$replyId}`;
-
-                        fetch(url, { method: 'delete', })
-                            .then(() => {
-                                getAllReplies(blogId);
-                            });
+                    if ($modalReplyContent.value.trim() === "") {
+                        alert("내용을 채워주세요");
+                        return;
                     }
+
+                    fetch(url, {
+                        method: 'PATCH',
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            replyWriter: $modalReplyWriter.value,
+                            replyContent: $modalReplyContent.value,
+                        }),
+                    })
+                        .then(() => {
+                            bootstrap.Modal.getInstance($modalReply).hide();
+
+                            alert("수정 완료");
+                            getAllReplies(blogId);
+                        });
                 }
+
             </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+                crossorigin="anonymous"></script>
         </body>
 
         </html>

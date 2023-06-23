@@ -5,12 +5,12 @@ import lombok.*;
 
 @Getter @ToString @Builder
 @AllArgsConstructor @NoArgsConstructor
-public class ReplyInsertDTO {
+public class ReplyCreateDTO {
     private long blogId;
     private String replyWriter;
     private String replyContent;
 
-    public ReplyInsertDTO(Reply reply){
+    public ReplyCreateDTO(Reply reply){
         this.blogId = reply.getBlogId();
         this.replyWriter = reply.getReplyWriter();
         this.replyContent = reply.getReplyContent();

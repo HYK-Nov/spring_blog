@@ -29,14 +29,14 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @RequestMapping("/list")
+    @RequestMapping(value = {"/list", "/list/"})
     public String list(Model model){
         List<Blog> blogList = blogService.findAll();
         model.addAttribute("blogList", blogList);
         return "blog/list";
     }
 
-    @RequestMapping("/detail/{bId}")
+    @RequestMapping(value = {"/detail/{bId}", "/detail/{bId}/"})
     public String detail(@PathVariable long bId, Model model){
         Blog blog = blogService.findById(bId);
 

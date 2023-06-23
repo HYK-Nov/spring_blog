@@ -1,18 +1,18 @@
 package com.spring.blog.repository;
 
-import com.spring.blog.dto.ReplyFindByIdDTO;
-import com.spring.blog.dto.ReplyInsertDTO;
-import com.spring.blog.dto.ReplyUpdateDTO;
+import com.spring.blog.dto.ReplyResponseDTO;
+import com.spring.blog.dto.ReplyCreateDTO;
+import com.spring.blog.dto.ReplyUpdateRequestDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface ReplyRepository {
-    List<ReplyFindByIdDTO> findAllByBlogId(long blogId);
-    ReplyFindByIdDTO findByReplyId(long replyId);
+    List<ReplyResponseDTO> findAllByBlogId(long blogId);
+    ReplyResponseDTO findByReplyId(long replyId);
     void deleteByReplyId(long replyId);
-    void save(ReplyInsertDTO replyInsertDTO);
-    void update(ReplyUpdateDTO replyUpdateDTO);
+    void save(ReplyCreateDTO replyCreateDTO);
+    void update(ReplyUpdateRequestDTO replyUpdateRequestDTO);
     void deleteAllReplyByBlogId(long blogId);
 }

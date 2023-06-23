@@ -1,7 +1,9 @@
 package com.spring.blog.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.blog.dto.ReplyInsertDTO;
+import com.spring.blog.dto.ReplyCreateDTO;
+import com.spring.blog.dto.ReplyUpdateRequestDTO;
 import com.spring.blog.repository.ReplyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -99,7 +101,7 @@ class ReplyControllerTest {
         long blogId = 1;
         String replyWriter = "또 사라짐";
         String replyContent = "가기 싫다";
-        ReplyInsertDTO replyInsertDTO = ReplyInsertDTO.builder()
+        ReplyCreateDTO replyCreateDTO = ReplyCreateDTO.builder()
                 .blogId(blogId)
                 .replyWriter(replyWriter)
                 .replyContent(replyContent)
@@ -108,7 +110,7 @@ class ReplyControllerTest {
         String url2 = "/reply/1/all";
 
 //        데이터 직렬화(JSON화)
-        final String requestBody = objectMapper.writeValueAsString(replyInsertDTO);
+        final String requestBody = objectMapper.writeValueAsString(replyCreateDTO);
 
         mockMvc.perform(post(url) // /reply 주소에 post 방식으로 요청을 넣고
                 .contentType(MediaType.APPLICATION_JSON) // 전달 자료는 json이며
@@ -136,5 +138,30 @@ class ReplyControllerTest {
 
         assertEquals(replyRepository.findAllByBlogId(blogId).size(), 3);
         assertNull(replyRepository.findByReplyId(replyId));
+    }
+
+    @Test
+    @Transactional
+    public void updateReplyTest() throws Exception {
+        long replyId = 3;
+        String replyWriter = "냥냥이";
+        String replyContent = "왈왈";
+        ReplyUpdateRequestDTO replyUpdateRequestDTO = ReplyUpdateRequestDTO.builder()
+                .replyWriter(replyWriter)
+                .replyContent(replyContent)
+                .build();
+        String url = "/reply/" + replyId;
+
+        final String requestBody = objectMapper.writeValueAsString(replyUpdateRequestDTO);
+
+        mockMvc.perform(patch(url).contentType(MediaType.APPLICATION_JSON).content(requestBody));
+
+        final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.replyId").value(replyId))
+                .andExpect(jsonPath("$.replyWriter").value(replyWriter))
+                .andExpect(jsonPath("$.replyContent").value(replyContent));
     }
 }
