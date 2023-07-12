@@ -3,6 +3,7 @@ package com.spring.blog.controller;
 import com.spring.blog.dto.ReplyResponseDTO;
 import com.spring.blog.dto.ReplyCreateDTO;
 import com.spring.blog.dto.ReplyUpdateRequestDTO;
+import com.spring.blog.entity.Reply;
 import com.spring.blog.exception.NotFoundReplyByReplyIdException;
 import com.spring.blog.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class ReplyController {
 //    어떤 자원에 접근할 것인지만 URI에 명시(메서드가 행동을 결정)
     @GetMapping("/{blogId}/all")
     //        rest 서버는 응답시 응답코드와 응답객체를 넘기기 때문에 ResponseEntity<자료형>을 리턴
-    public ResponseEntity<List<ReplyResponseDTO>> findAllReplies(@PathVariable long blogId) {
+    public ResponseEntity<List<Reply>> findAllReplies(@PathVariable long blogId) {
 
-        List<ReplyResponseDTO> replies = replyService.findAllByBlogId(blogId);
+        List<Reply> replies = replyService.findAllByBlogId(blogId);
 
         return ResponseEntity
                 .ok() // 200코드, 상태 코드와 body에 전송할 데이터를 같이 작성할 수 있음
@@ -40,7 +41,7 @@ public class ReplyController {
     @GetMapping("/{replyId}")
     public ResponseEntity<?> findReply(@PathVariable long replyId) {
 
-        ReplyResponseDTO reply = replyService.findByReplyId(replyId);
+        Reply reply = replyService.findByReplyId(replyId);
 
         if (reply == null) {
             try {
@@ -56,9 +57,9 @@ public class ReplyController {
     @PostMapping("")
 //    RestController는 데이터를 JSON으로 주고 받음
 //    따라서 @RequestBody를 이용해 JSON으로 들어온 데이터를 역직렬화 하도록 설정
-    public ResponseEntity<String> insertReply(@RequestBody ReplyCreateDTO replyCreateDTO){
+    public ResponseEntity<String> insertReply(@RequestBody Reply reply){
         
-        replyService.save(replyCreateDTO);
+        replyService.save(reply);
         
         return ResponseEntity.ok("저장 완료");
     }
@@ -74,12 +75,12 @@ public class ReplyController {
 //    수정 로직은 put, patch 메서드로 /reply/댓글번호 ReplyUpdateRequestDTO를 requestBody로 받아 요청처리 함
 //    @PutMapping("/{replyId}")
     @PatchMapping("/{replyId}")
-    public ResponseEntity<String> updateReply(@PathVariable long replyId, @RequestBody ReplyUpdateRequestDTO replyUpdateRequestDTO){
+    public ResponseEntity<String> updateReply(@PathVariable long replyId, @RequestBody Reply reply){
 
 //        JSON 데이터에 replyId를 포함하는 대신 url에 포함시켰으므로 requestBody에 추가
-        replyUpdateRequestDTO.setReplyId(replyId);
+        reply.setReplyId(replyId);
 //        setter에 포함
-        replyService.update(replyUpdateRequestDTO);
+        replyService.update(reply);
 
         return ResponseEntity.ok("수정 완료");
     }

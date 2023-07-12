@@ -2,6 +2,15 @@ spring:
   # 민감 정보 분리
   profiles:
     active: db
+  
+  #  JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
 
   #  JSP 설정
   mvc:

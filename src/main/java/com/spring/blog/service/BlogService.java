@@ -1,9 +1,9 @@
 package com.spring.blog.service;
 
-import com.spring.blog.dto.BlogUpdateDTO;
 import com.spring.blog.entity.Blog;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BlogService {
 
