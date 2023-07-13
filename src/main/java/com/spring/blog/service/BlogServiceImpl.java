@@ -6,6 +6,10 @@ import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.ReplyJPARepository;
 import com.spring.blog.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +34,25 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<Blog> findAll() {
+    public Page<Blog> findAll(Long pageNum) {
 //        return blogRepository.findAll(); // Mybatis를 활용한 전체 글 가져오기
-        return blogJPARepository.findAll(); // JPA를 활용한 전체 글 가져오기
+//        return blogJPARepository.findAll(); // JPA를 활용한 전체 글 가져오기
+
+//        페이징 처리에 관련된 정보를 먼저 객체로 생성
+        Pageable pageable = PageRequest.of((getCalibratedPageNum(pageNum) - 1), 10, Sort.by("blogId").descending());
+
+//        생성된 페이징 정보를 파라미터로 제공해서 findAll()을 호출
+        return blogJPARepository.findAll(pageable);
+    }
+
+    public int getCalibratedPageNum(Long pageNum){
+        if (pageNum == null || pageNum < 1L){
+            pageNum = 1L;
+        }else{
+            int totalPagesCount = (int) Math.ceil(blogJPARepository.count() / 10.0);
+            pageNum = (pageNum > totalPagesCount) ? totalPagesCount : pageNum;
+        }
+        return pageNum.intValue();
     }
 
     @Override

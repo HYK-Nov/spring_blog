@@ -44,6 +44,7 @@
                 <div class="row border-bottom">
                     <div class="col">${blog.writer}</div>
                     <div class="col-1">${blog.publishedAt}</div>
+                    <div class="col-1">${blog.updatedAt}</div>
                     <div class="col-1">${blog.blogCount}</div>
                 </div>
                 <div class="row border-bottom">
@@ -65,7 +66,7 @@
                     <div class="col-1">
                         <form action="/blog/delete" method="POST">
                             <input type="hidden" class="form-control" name="blogId" value="${blog.blogId}">
-                            <button type="submit" class="btn btn-outline-danger">삭제</button>
+                            <button type="submit" class="btn btn-danger">삭제</button>
                         </form>
                     </div>
                 </div>

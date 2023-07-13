@@ -1,6 +1,7 @@
 package com.spring.blog.service;
 
 import com.spring.blog.entity.Blog;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,7 @@ public interface BlogService {
     //    비즈니스 로직을 담당할 메서드를 "정의"만 하면 됨
 
     //    전체 블로그 포스팅을 조회하는 메서드
-    List<Blog> findAll();
+    Page<Blog> findAll(Long pageNum);
 
     //    단일 포스팅 조회
     Blog findById(long blogId);
