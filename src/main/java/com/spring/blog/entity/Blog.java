@@ -31,9 +31,7 @@ public class Blog {
     @Column(nullable = false)   // not null
     private String blogContent;
 
-    @ColumnDefault("TIMESTAMP")
     private LocalDateTime publishedAt;
-    @ColumnDefault("TIMESTAMP")
     private LocalDateTime updatedAt;
 
     @ColumnDefault("0") // 조회수는 기본값을 0으로 설정
