@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,6 +32,7 @@ public class BasicSecurityConfig {  // 베이직 방식 인증을 사용하도�
                 .requestMatchers("/static/**", "")  // 기본 경로는 src/main/java/resources 로 잡히고
                                                         // 추후 설정할 정적자원 저장 경로에 보안 해제
                 .dispatcherTypeMatchers(DispatcherType.FORWARD);    // MVC 방식에서 View 파일을 로딩하는 것을 보안 범위에서 해제
+                                                                    // 이 설정을 하지 않으면, .jsp 파일이 화면에 출력되지 않음
     }
 
 //    http 요청에 대한 웹 보안 구성
@@ -43,43 +45,27 @@ public class BasicSecurityConfig {  // 베이직 방식 인증을 사용하도�
                         .anyRequest()   // 위에 적힌 경로 말고는
                         .authenticated())   // 로그인 필수
                 .formLogin(formLoginConfig -> formLoginConfig   // 로그인 폼으로 로그인 제어
-                        .loginPage("/login")    // 로그인 페이지로 지정할 주소
-                        .defaultSuccessUrl("/blog/list"))   // 로그인 하면 처음으로 보여질 페이지
+//                        .loginPage("/login")    // 로그인 페이지로 지정할 주소
+//                        .defaultSuccessUrl("/blog/list")    // 로그인 하면 처음으로 보여질 페이지
+                        .disable())   // 토큰 사용시 폼로그인은 사용하지 않음
                 .logout(logoutConfig -> logoutConfig    // 로그아웃 관련 설정
+                        .logoutUrl("/logout")   // default가 "/logout"이기 때문에 설정 할 필요 없음
                         .logoutSuccessUrl("/login") // 로그아웃 성공했으면 넘어갈 경로
                         .invalidateHttpSession(true))   // 로그아웃하면 다음 접속시 로그인이 풀려있게 설정
                 .csrf(csrfConfig -> csrfConfig.disable())// csrf 공격 방지용 토큰 사용X
+                .sessionManagement(sessionConfig -> sessionConfig   // 세션을 무상태성(비사용) 설정
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))    // 토큰 사용시 필요
                 .build();
-
-        /*return http
-                .authorizeRequests()
-                .requestMatchers("/login", "/signup", "/user")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()  // 다음 설정으로 넘어가기
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/blog/list")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .and()
-                .csrf()
-                .disable()  // 을 쓰지 않겠음.
-                .build();*/
     }
 
 //    위의 설정을 따라가는 인증은 어떤 서비스 클래스를 통해서 설정할 것인가?
     @Bean
     public AuthenticationManager authenticationManager
     (HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) throws  Exception{
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userService)    // userService에 기술된 내용을 토대로 로그인처리
-                .passwordEncoder(bCryptPasswordEncoder) // 비밀번호 암호화 저장 모듈
-                .and()
-                .build();
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(userService)
+                .passwordEncoder(bCryptPasswordEncoder);
+        return builder.build();
     }
 
 //    암호화 모듈 임포트

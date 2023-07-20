@@ -8,10 +8,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Stack;
 
@@ -22,7 +25,7 @@ import java.util.Stack;
 public class BlogController {
 
     //    컨트롤러 레이어는 서비스 레이어를 직접 호출
-    private BlogService blogService;
+    private final BlogService blogService;
 
     @Autowired
     public BlogController(BlogService blogService) {
@@ -53,7 +56,9 @@ public class BlogController {
     }
 
     @RequestMapping(value = {"/detail/{bId}", "/detail/{bId}/"})
-    public String detail(@PathVariable long bId, Model model) {
+    public String detail(@PathVariable long bId, Model model, Principal principal) {
+
+        model.addAttribute("username", principal.getName());
         Blog blog = blogService.findById(bId);
 
         if (blog == null) {
@@ -73,7 +78,11 @@ public class BlogController {
 //    대신 폼 페이지는 GET방식으로 접속했을 때 연결
 //    폼에서 작성 완료한 내용을 POST 방식으로 제출해 저장
     @GetMapping("/insert")
-    public String insert() {
+    public String insert(Model model, Principal principal) {
+//        SecurityContext(Controller), Principal(JSP)은 둘 다 인증정보를 가지고 있는 객체
+        System.out.println(principal);
+//        principal.getName()은 현재 로그인 유저의 아이디를 리턴
+        model.addAttribute("username", principal.getName());
         return "blog/blog-form";
     }
 

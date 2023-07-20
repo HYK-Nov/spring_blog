@@ -1,9 +1,7 @@
 package com.spring.blog.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Entity @Getter @NoArgsConstructor
+@Entity @Getter @Setter
+@NoArgsConstructor
 @Table(name = "users")  // 만약 클래스명과 테이블명이 다르게 매칭되기를 원하면 사용하는 어노테이션. USER는 MySQL의 예약어
 public class User implements UserDetails {  // UserDetails 의 구현체만 스프링 시큐리티에서 인증 정보로 사용할 수 있음
     
@@ -36,8 +35,7 @@ public class User implements UserDetails {  // UserDetails 의 구현체만 스�
         this.password = password;
         this.loginId = loginId;
     }
-    
-    
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("user"));

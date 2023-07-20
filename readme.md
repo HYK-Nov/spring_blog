@@ -123,7 +123,7 @@ public void 테스트메서드(){
 }
 ```
 
----
+--- 
 ## 테스트 코드 고도화 2(병렬처리)
 src/test/resources/junit-platform.properties
 

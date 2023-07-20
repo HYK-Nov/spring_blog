@@ -57,17 +57,21 @@
                         <a href="/blog/list"><button type="button" class="btn btn-secondary">목록</button></a>
                     </div>
                     <div class="col-1">
-                        <form action="/blog/updateform" method="POST">
-                            <input type="hidden" class="form-control" name="blogId" value="${blog.blogId}">
-                            <button type="submit" class="btn btn-light">수정</button>
-                        </form>
+                        <c:if test="${username eq blog.writer}">
+                            <form action="/blog/updateform" method="POST">
+                                <input type="hidden" class="form-control" name="blogId" value="${blog.blogId}">
+                                <button type="submit" class="btn btn-light">수정</button>
+                            </form>
+                        </c:if>
                     </div>
                     <div class="col"></div>
                     <div class="col-1">
-                        <form action="/blog/delete" method="POST">
-                            <input type="hidden" class="form-control" name="blogId" value="${blog.blogId}">
-                            <button type="submit" class="btn btn-danger">삭제</button>
-                        </form>
+                        <c:if test="${username eq blog.writer}"> <!-- blog의 글쓴이랑 인증정보로 보낸 글쓴이 정보가 일치할 때만 버튼 노출-->
+                            <form action="/blog/delete" method="POST">
+                                <input type="hidden" class="form-control" name="blogId" value="${blog.blogId}">
+                                <button type="submit" class="btn btn-danger">삭제</button>
+                            </form>
+                        </c:if>
                     </div>
                 </div>
                 <hr>

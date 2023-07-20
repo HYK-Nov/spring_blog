@@ -17,19 +17,19 @@
                 <div class="row">
                     <div class="col"></div>
                     <div class="col-4">
-                        <form action="/login" method="POST">
+                        <form action="/signup" method="POST">
                             <div class="d-grid gap-2">
-                                <!-- 아이디는 username, 비밀번호는 password로 고정
-                                    토큰 기반에서는 Entity에서 사용하는 로그인 명칭으로 변경 -->
-                                <input type="text" class="form-control" name="loginId" placeholder="아이디">
-                                <input type="password" class="form-control" name="password" placeholder="비밀번호">
-                                <input type="submit" class="btn btn-primary" value="로그인">
-                                <a href="/signup" class="btn btn-outline-primary" role="button">회원가입</a>
+                                아이디: <input type="text" class="form-control" name="loginId" placeholder="아이디" required>
+                                비밀번호: <input type="password" class="form-control" name="password" placeholder="비밀번호"
+                                    required>
+                                이메일: <input type="email" class="form-control" name="email" placeholder="이메일" required>
+                                <input type="submit" class="btn btn-primary" value="가입하기">
                             </div>
                         </form>
                     </div>
                     <div class="col"></div>
                 </div>
+            </div>
             </div>
         </body>
 
